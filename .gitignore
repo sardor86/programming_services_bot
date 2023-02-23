@@ -1,4 +1,3 @@
-.idea
 __pycache__/
 venv/
 .env
@@ -9,3 +8,4 @@ tgbot/keyboards/__pycache__/
 tgbot/misc/__pycache__/
 tgbot/models/__pycache__/
 tgbot/services/__pycache__/
+.idea

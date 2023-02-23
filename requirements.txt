@@ -1,2 +1,4 @@
-aiogram
-environs
+aiogram~=2.25.1
+environs~=9.5.0
+
+SQLAlchemy~=2.0.4
