@@ -129,3 +129,15 @@ class Users:
         return self.session.query(UsersTable).filter(UsersTable.rights_admin == False and
                                                      UsersTable.rights_programmer == False and
                                                      UsersTable.rights_operator == False).all()
+
+    def check_admin(self, user_id: int) -> bool:
+        return not self.session.query(UsersTable).filter(UsersTable.rights_admin == True and
+                                                         UsersTable.user_id == user_id).first() is None
+
+    def check_programmer(self, user_id: int) -> bool:
+        return not self.session.query(UsersTable).filter(UsersTable.rights_programmer == True and
+                                                         UsersTable.user_id == user_id).first() is None
+
+    def check_operator(self, user_id: int) -> bool:
+        return not self.session.query(UsersTable).filter(UsersTable.rights_operator == True and
+                                                         UsersTable.user_id == user_id).first() is None
