@@ -28,29 +28,38 @@ async def choice_tip_user_admin(callback: CallbackQuery, state: FSMContext) -> N
 
 
 async def get_id_user_admin(message: Message, state: FSMContext) -> None:
+    logger.info('check id')
     if not message.text.isdigit():
         await message.reply('Вы вели не число')
         return
 
+    logger.info('get tip user')
     async with state.proxy() as data:
         user_tip = data['tip_user']
 
+    logger.info('get user db')
     user_data = Users(message.bot.get('config').db)
     if user_tip == 'admin':
         if user_data.up_admin_right(int(message.text)):
+            logger.info('up user admin privilege')
             await message.reply('Вы повысили права пользователя')
         else:
+            logger.warning('error up privilege user')
             await message.reply('Пользователь не нашлось')
     if user_tip == 'programmer':
         if user_data.up_programmer_right(int(message.text)):
+            logger.info('up user programmer privilege')
             await message.reply('Вы повысили права пользователя')
         else:
+            logger.warning('error up privilege user')
             await message.reply('Пользователь не нашлось')
     if user_tip == 'operator':
         if user_data.up_operator_right(int(message.text)):
+            logger.info('up user operator privilege')
             await message.reply('Вы повысили права пользователя')
         else:
-            await message.reply('Пользователь не нашлось')
+            logger.warning('error up privilege user')
+            await message.reply('Пользователь не найден')
 
 
 def register_up_privilege_handler(dp: Dispatcher) -> None:

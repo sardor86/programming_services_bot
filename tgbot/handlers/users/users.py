@@ -48,6 +48,11 @@ def register_user(dp: Dispatcher) -> None:
     )
     logger.info('Register user handler')
 
+    logger.info('Register start function handler')
     dp.register_message_handler(start_user, commands='start', state='*', privileged_users=False)
+
+    logger.info('Register help function handler')
     dp.register_message_handler(help_user, commands='help', state='*', privileged_users=False)
+
+    logger.info('Register privileged user menu function handler')
     dp.register_message_handler(choice_privileged_user_menu, commands='menu', state='*', privileged_users=True)
