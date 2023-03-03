@@ -3,7 +3,7 @@ from aiogram.dispatcher import Dispatcher
 import logging
 
 from tgbot.keyboards.inline import admin_menu, admin_choice_tip_user
-from tgbot.misc.states import UpPrivilegeUsers, DownPrivilegeUsers
+from tgbot.misc.states import UpPrivilegeUsers, DownPrivilegeUsers, AddEvent, DeleteEvent
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +42,29 @@ async def down_privilege_user(callback: CallbackQuery) -> None:
     await callback.message.edit_text('Выберите тип пользователя', reply_markup=admin_choice_tip_user())
 
 
+async def add_new_event(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+    await callback.message.edit_text('Отправьте нам фото')
+
+    logger.info('Set get_phone in AddEvent')
+    await AddEvent.get_photo.set()
+
+
+async def delete_event(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    await callback.message.edit_text('Введите id события')
+
+    logger.info('set get event id in DeleteEvent')
+    await DeleteEvent.get_event_id.set()
+
+
 def register_menu_handlers(dp: Dispatcher) -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -60,8 +83,20 @@ def register_menu_handlers(dp: Dispatcher) -> None:
                                        state='*',
                                        is_admin=True)
 
-    logger.info('register DOWN user privilege for admin handler')
+    logger.info('register down user privilege for admin handler')
     dp.register_callback_query_handler(down_privilege_user,
                                        lambda callback: callback.data == 'down_user_admin',
+                                       state='*',
+                                       is_admin=True)
+
+    logger.info('register add event for admin handler')
+    dp.register_callback_query_handler(add_new_event,
+                                       lambda callback: callback.data == 'add_event_admin',
+                                       state='*',
+                                       is_admin=True)
+
+    logger.info('register delete event for admin handler')
+    dp.register_callback_query_handler(delete_event,
+                                       lambda callback: callback.data == 'delete_event_admin',
                                        state='*',
                                        is_admin=True)

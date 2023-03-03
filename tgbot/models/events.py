@@ -53,3 +53,6 @@ class Events:
 
     def get_all_event(self) -> list:
         return self.session.query().all()
+
+    def get_event(self, event_id: int) -> EventsTable:
+        return self.session.query(EventsTable).filter(EventsTable.id == event_id).first()

@@ -66,6 +66,9 @@ async def get_id_user_admin(message: Message, state: FSMContext) -> None:
             logger.warning('error down privilege user')
             await message.reply('Пользователь не найден')
 
+    logger.info('finish down privilege state')
+    await state.finish()
+
 
 def register_down_privilege_handler(dp: Dispatcher) -> None:
     logging.basicConfig(

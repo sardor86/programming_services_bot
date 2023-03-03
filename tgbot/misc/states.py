@@ -9,3 +9,12 @@ class UpPrivilegeUsers(StatesGroup):
 class DownPrivilegeUsers(StatesGroup):
     choice_tip_user = State()
     choice_user_id = State()
+
+
+class AddEvent(StatesGroup):
+    get_photo = State()
+    get_text = State()
+
+
+class DeleteEvent(StatesGroup):
+    get_event_id = State()

@@ -16,7 +16,8 @@ def admin_menu() -> InlineKeyboardMarkup:
 
     keyboard.insert(InlineKeyboardButton('Повысить права пользователя', callback_data='up_user_admin'))
     keyboard.insert(InlineKeyboardButton('Понизить права пользователя', callback_data='down_user_admin'))
-    keyboard.insert(InlineKeyboardButton('Добавить событье', callback_data='add_event_admin'))
+    keyboard.insert(InlineKeyboardButton('Добавить событие', callback_data='add_event_admin'))
+    keyboard.insert(InlineKeyboardButton('Удалить событие', callback_data='delete_event_admin'))
     return keyboard
 
 

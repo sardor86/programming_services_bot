@@ -5,6 +5,8 @@ import logging
 
 from tgbot.keyboards.inline import choice_menu, user_menu
 
+from tgbot.models.users import Users
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,6 +20,11 @@ async def start_user(message: Message) -> None:
     await message.reply(f'Приветствуем {message.from_user.username}\n'
                         f'вы здесь можете купить услуги по программированию',
                         reply_markup=user_menu())
+
+    logger.info('Register new user')
+    Users(message.bot.get('config').db).add_users(message.from_user.id,
+                                                  message.from_user.username,
+                                                  message.from_user.full_name)
 
 
 async def help_user(message: Message) -> None:

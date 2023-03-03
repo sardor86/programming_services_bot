@@ -61,9 +61,20 @@ async def get_id_user_admin(message: Message, state: FSMContext) -> None:
             logger.warning('error up privilege user')
             await message.reply('Пользователь не найден')
 
+    logger.info('finish up privilege state')
+    await state.finish()
+
 
 def register_up_privilege_handler(dp: Dispatcher) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    logger.info('register up privilege user function choice tip user')
     dp.register_callback_query_handler(choice_tip_user_admin,
                                        state=UpPrivilegeUsers.choice_tip_user)
+
+    logger.info('register up privilege user function choice user id')
     dp.register_message_handler(get_id_user_admin,
                                 state=UpPrivilegeUsers.choice_user_id)
