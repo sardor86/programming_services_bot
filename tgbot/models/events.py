@@ -2,9 +2,8 @@ import sqlalchemy as db
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import declarative_base, Session
 from sqlalchemy.inspection import inspect
-from sqlalchemy import delete
 
-from tgbot.config import DataBase
+from tgbot.config import DataBase, load_config
 
 Base = declarative_base()
 
@@ -39,14 +38,18 @@ class Events:
         event = EventsTable(img=img,
                             text=text)
         self.session.add(event)
-        return inspect(event).primary_key[0].name
+        self.session.commit()
+        return self.session.query(EventsTable).all()[-1].id
 
     def check_event(self, event_id: int) -> bool:
         return not self.session.query(EventsTable).filter(EventsTable.id == event_id).first() is None
 
     def delete_event(self, event_id: int) -> bool:
         if self.check_event(event_id):
-            event = self.session.query(EventsTable).filter(EventsTable.id == event_id).first
-            self.session.delete(event)
+            self.session.delete(self.session.query(EventsTable).filter(EventsTable.id == event_id).first())
+            self.session.commit()
             return True
         return False
+
+    def get_all_event(self) -> list:
+        return self.session.query().all()
