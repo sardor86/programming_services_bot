@@ -18,3 +18,8 @@ class AddEvent(StatesGroup):
 
 class DeleteEvent(StatesGroup):
     get_event_id = State()
+
+
+class AddService(StatesGroup):
+    get_photo = State()
+    get_text = State()

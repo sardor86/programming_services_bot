@@ -3,8 +3,8 @@ from aiogram.dispatcher import FSMContext, Dispatcher
 
 import logging
 
-from tgbot.misc import AddEvent
-from tgbot.models import Events
+from tgbot.misc import AddService
+from tgbot.models import Services
 from tgbot.models import Users
 
 
@@ -24,8 +24,8 @@ async def get_photo(message: Message, state: FSMContext) -> None:
 
     await message.reply('Введите текст')
 
-    logger.info('set get_text state in AddEvent')
-    await AddEvent.get_text.set()
+    logger.info('set get_text state in AddService')
+    await AddService.get_text.set()
 
 
 async def get_not_photo(message: Message) -> None:
@@ -52,20 +52,12 @@ async def get_text(message: Message, state: FSMContext) -> None:
     text = message.text
     logger.info('get text')
 
-    event_id = Events(message.bot.get('config').db).create_event(photo, text)
+    services_id = Services(message.bot.get('config').db).create_service(photo, text)
     logger.info('create event')
 
-    await message.reply(f'Создана новая событие id: {event_id}')
-    await message.reply('Идет рассылка события')
+    await message.reply(f'Создана новая услуга id: {services_id}')
 
-    users = Users(message.bot.get('config').db).get_all_users()
-    for user in users:
-        logger.info(f'send event from {user}')
-        await message.bot.send_photo(chat_id=user.user_id, photo=photo, caption=text)
-
-    await message.reply('Рассылка закончена')
-
-    logger.info('finish add event state')
+    logger.info('finish add services state')
     await state.finish()
 
 
@@ -79,7 +71,7 @@ async def get_not_text(message: Message) -> None:
     await message.reply('Это не текст')
 
 
-def register_add_event_handler(dp: Dispatcher) -> None:
+def register_add_service_handler(dp: Dispatcher) -> None:
     logging.basicConfig(
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
@@ -88,19 +80,19 @@ def register_add_event_handler(dp: Dispatcher) -> None:
     logger.info('register get photo function handler for events')
     dp.register_message_handler(get_photo,
                                 content_types=['photo'],
-                                state=AddEvent.get_photo)
+                                state=AddService.get_photo)
 
     logger.info('register get not photo function handler for events')
     dp.register_message_handler(get_not_photo,
                                 lambda message: not message.photo,
-                                state=AddEvent.get_photo)
+                                state=AddService.get_photo)
 
     logger.info('register get text function handler for events')
     dp.register_message_handler(get_text,
                                 content_types=['text'],
-                                state=AddEvent.get_text)
+                                state=AddService.get_text)
 
     logger.info('register get not text function handler for events')
     dp.register_message_handler(get_text,
                                 lambda message: not message.text,
-                                state=AddEvent.get_text)
+                                state=AddService.get_text)

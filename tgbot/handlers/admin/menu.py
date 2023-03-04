@@ -2,8 +2,8 @@ from aiogram.types import CallbackQuery
 from aiogram.dispatcher import Dispatcher
 import logging
 
-from tgbot.keyboards.inline import admin_menu, admin_choice_tip_user
-from tgbot.misc.states import UpPrivilegeUsers, DownPrivilegeUsers, AddEvent, DeleteEvent
+from tgbot.keyboards import admin_menu, admin_choice_tip_user
+from tgbot.misc import UpPrivilegeUsers, DownPrivilegeUsers, AddEvent, DeleteEvent, AddService
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +65,18 @@ async def delete_event(callback: CallbackQuery) -> None:
     await DeleteEvent.get_event_id.set()
 
 
+async def add_new_service(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    await callback.message.edit_text('Отправьте нам фото')
+
+    logger.info('set get photo in AddService')
+    await AddService.get_photo.set()
+
+
 def register_menu_handlers(dp: Dispatcher) -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -98,5 +110,11 @@ def register_menu_handlers(dp: Dispatcher) -> None:
     logger.info('register delete event for admin handler')
     dp.register_callback_query_handler(delete_event,
                                        lambda callback: callback.data == 'delete_event_admin',
+                                       state='*',
+                                       is_admin=True)
+
+    logger.info('register add service for admin handler')
+    dp.register_callback_query_handler(add_new_service,
+                                       lambda callback: callback.data == 'add_service_admin',
                                        state='*',
                                        is_admin=True)

@@ -3,7 +3,7 @@ from aiogram.types import Message
 
 import logging
 
-from tgbot.keyboards.inline import choice_menu, user_menu
+from tgbot.keyboards import choice_menu, user_menu
 
 from tgbot.models.users import Users
 

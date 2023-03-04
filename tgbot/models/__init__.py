@@ -1,8 +1,10 @@
-from .users import Users
-from .events import Events
+from .users import Users, UsersTable
+from .events import Events, EventsTable
+from .services import Services, ServicesTable
 from tgbot.config import DataBase
 
 
 def create_all_db(db: DataBase):
     Users(db).create_db()
     Events(db).create_db()
+    Services(db).create_db()

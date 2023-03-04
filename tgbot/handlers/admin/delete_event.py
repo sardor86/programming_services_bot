@@ -3,8 +3,8 @@ from aiogram.dispatcher import FSMContext, Dispatcher
 
 import logging
 
-from tgbot.misc.states import DeleteEvent
-from tgbot.models.events import Events
+from tgbot.misc import DeleteEvent
+from tgbot.models import Events
 
 
 logger = logging.getLogger(__name__)

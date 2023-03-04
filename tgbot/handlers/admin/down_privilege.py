@@ -3,8 +3,8 @@ from aiogram.dispatcher import FSMContext, Dispatcher
 
 import logging
 
-from tgbot.misc.states import DownPrivilegeUsers
-from tgbot.models.users import Users
+from tgbot.misc import DownPrivilegeUsers
+from tgbot.models import Users
 
 
 logger = logging.getLogger(__name__)

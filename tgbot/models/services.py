@@ -7,21 +7,21 @@ from tgbot.config import DataBase
 Base = declarative_base()
 
 
-class EventsTable(Base):
-    __tablename__ = 'events'
+class ServicesTable(Base):
+    __tablename__ = 'services'
 
     id = Column(Integer(), primary_key=True)
     img = Column(String(255), nullable=False)
     text = Column(String(1024), default='')
 
     def __str__(self) -> str:
-        return f'<Event {self.id}>'
+        return f'<Services {self.id}>'
 
     def __repr__(self) -> str:
-        return f'<Event {self.id}>'
+        return f'<Services {self.id}>'
 
 
-class Events:
+class Services:
     def __init__(self, data_base: DataBase) -> None:
         self.engine = db.create_engine(f'postgresql://{data_base.user}:'
                                        f'{data_base.password}@'
@@ -33,25 +33,25 @@ class Events:
     def create_db(self):
         Base.metadata.create_all(self.engine)
 
-    def create_event(self, img: str, text: str) -> int:
-        event = EventsTable(img=img,
-                            text=text)
+    def create_service(self, img: str, text: str) -> int:
+        event = ServicesTable(img=img,
+                              text=text)
         self.session.add(event)
         self.session.commit()
-        return self.session.query(EventsTable).all()[-1].id
+        return self.session.query(ServicesTable).all()[-1].id
 
-    def check_event(self, event_id: int) -> bool:
-        return not self.session.query(EventsTable).filter(EventsTable.id == event_id).first() is None
+    def check_service(self, event_id: int) -> bool:
+        return not self.session.query(ServicesTable).filter(ServicesTable.id == event_id).first() is None
 
-    def delete_event(self, event_id: int) -> bool:
-        if self.check_event(event_id):
-            self.session.delete(self.session.query(EventsTable).filter(EventsTable.id == event_id).first())
+    def delete_service(self, service_id: int) -> bool:
+        if self.check_service(service_id):
+            self.session.delete(self.session.query(ServicesTable).filter(ServicesTable.id == service_id).first())
             self.session.commit()
             return True
         return False
 
-    def get_all_event(self) -> list:
+    def get_all_service(self) -> list:
         return self.session.query().all()
 
-    def get_event(self, event_id: int) -> EventsTable:
-        return self.session.query(EventsTable).filter(EventsTable.id == event_id).first()
+    def get_service(self, event_id: int) -> ServicesTable:
+        return self.session.query(ServicesTable).filter(ServicesTable.id == event_id).first()

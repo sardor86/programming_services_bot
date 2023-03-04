@@ -3,7 +3,7 @@ import typing
 from aiogram.dispatcher.filters import BoundFilter
 
 from tgbot.config import Config
-from tgbot.models.users import Users
+from tgbot.models import Users
 
 
 class OperatorFilter(BoundFilter):
