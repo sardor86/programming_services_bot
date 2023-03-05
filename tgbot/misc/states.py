@@ -23,3 +23,7 @@ class DeleteEvent(StatesGroup):
 class AddService(StatesGroup):
     get_photo = State()
     get_text = State()
+
+
+class DeleteService(StatesGroup):
+    get_service_id = State()
