@@ -80,19 +80,23 @@ def register_add_service_handler(dp: Dispatcher) -> None:
     logger.info('register get photo function handler for events')
     dp.register_message_handler(get_photo,
                                 content_types=['photo'],
-                                state=AddService.get_photo)
+                                state=AddService.get_photo,
+                                is_admin=True)
 
     logger.info('register get not photo function handler for events')
     dp.register_message_handler(get_not_photo,
                                 lambda message: not message.photo,
-                                state=AddService.get_photo)
+                                state=AddService.get_photo,
+                                is_admin=True)
 
     logger.info('register get text function handler for events')
     dp.register_message_handler(get_text,
                                 content_types=['text'],
-                                state=AddService.get_text)
+                                state=AddService.get_text,
+                                is_admin=True)
 
     logger.info('register get not text function handler for events')
     dp.register_message_handler(get_text,
                                 lambda message: not message.text,
-                                state=AddService.get_text)
+                                state=AddService.get_text,
+                                is_admin=True)

@@ -42,4 +42,5 @@ def register_delete_event_handler(dp: Dispatcher) -> None:
     logger.info('register get event id function handler for events')
     dp.register_message_handler(get_id_event,
                                 content_types=['text'],
-                                state=DeleteEvent.get_event_id)
+                                state=DeleteEvent.get_event_id,
+                                is_admin=True)

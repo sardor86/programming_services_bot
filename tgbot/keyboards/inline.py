@@ -7,7 +7,10 @@ from tgbot.config import DataBase
 def user_menu() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
-    keyboard.insert(InlineKeyboardButton('something', callback_data='something'))
+    keyboard.insert(InlineKeyboardButton('Посмотреть услуги', callback_data='watch_service_0'))
+    keyboard.insert(InlineKeyboardButton('Посмотреть событья', callback_data='watch_event_0'))
+    keyboard.insert(InlineKeyboardButton('Связатся с оператором', callback_data='call_with_operator'))
+    keyboard.insert(InlineKeyboardButton('Корзинка', callback_data='basket'))
     return keyboard
 
 
@@ -63,3 +66,18 @@ def choice_menu(db: DataBase, user_id: int) -> InlineKeyboardMarkup:
 
     return keyboard
 
+
+def get_services_menu(service_number: int, max_service_number: int) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=3)
+
+    if not service_number == 0:
+        keyboard.insert(InlineKeyboardButton('<', callback_data=f'watch_service_{service_number - 1}'))
+
+    keyboard.insert(InlineKeyboardButton('общатся с оператором', callback_data=f'call_with_operator_about_{service_number}'))
+
+    if not service_number == max_service_number:
+        keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_service_{service_number + 1}'))
+
+    keyboard.add(InlineKeyboardButton('Добавить в корзину', callback_data='add_to_basket_service'))
+
+    return keyboard

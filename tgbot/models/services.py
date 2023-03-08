@@ -51,7 +51,7 @@ class Services:
         return False
 
     def get_all_service(self) -> list:
-        return self.session.query().all()
+        return self.session.query(ServicesTable).all()
 
     def get_service(self, event_id: int) -> ServicesTable:
         return self.session.query(ServicesTable).filter(ServicesTable.id == event_id).first()

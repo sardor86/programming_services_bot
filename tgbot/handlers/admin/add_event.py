@@ -88,19 +88,23 @@ def register_add_event_handler(dp: Dispatcher) -> None:
     logger.info('register get photo function handler for events')
     dp.register_message_handler(get_photo,
                                 content_types=['photo'],
-                                state=AddEvent.get_photo)
+                                state=AddEvent.get_photo,
+                                is_admin=True)
 
     logger.info('register get not photo function handler for events')
     dp.register_message_handler(get_not_photo,
                                 lambda message: not message.photo,
-                                state=AddEvent.get_photo)
+                                state=AddEvent.get_photo,
+                                is_admin=True)
 
     logger.info('register get text function handler for events')
     dp.register_message_handler(get_text,
                                 content_types=['text'],
-                                state=AddEvent.get_text)
+                                state=AddEvent.get_text,
+                                is_admin=True)
 
     logger.info('register get not text function handler for events')
     dp.register_message_handler(get_text,
                                 lambda message: not message.text,
-                                state=AddEvent.get_text)
+                                state=AddEvent.get_text,
+                                is_admin=True)

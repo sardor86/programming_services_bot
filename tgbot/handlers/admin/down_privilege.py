@@ -78,8 +78,10 @@ def register_down_privilege_handler(dp: Dispatcher) -> None:
 
     logger.info('register down privilege user function choice tip user')
     dp.register_callback_query_handler(choice_tip_user_admin,
-                                       state=DownPrivilegeUsers.choice_tip_user)
+                                       state=DownPrivilegeUsers.choice_tip_user,
+                                       is_admin=True)
 
     logger.info('register down privilege user function choice user id')
     dp.register_message_handler(get_id_user_admin,
-                                state=DownPrivilegeUsers.choice_user_id)
+                                state=DownPrivilegeUsers.choice_user_id,
+                                is_admin=True)
