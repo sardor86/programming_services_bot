@@ -21,9 +21,16 @@ class TgBot:
 
 
 @dataclass
+class IdGroup:
+    operator_id: int
+    programmer_id: int
+
+
+@dataclass
 class Config:
     db: DataBase
     bot: TgBot
+    id_group: IdGroup
 
 
 def load_config(path: str = None) -> Config:
@@ -35,6 +42,7 @@ def load_config(path: str = None) -> Config:
 
     env = Env()
     env.read_env(path)
+
     return Config(
         db=DataBase(
             host=env.str('DB_HOST'),
@@ -44,5 +52,9 @@ def load_config(path: str = None) -> Config:
         ),
         bot=TgBot(
             token=env.str('BOT_TOKEN')
+        ),
+        id_group=IdGroup(
+            operator_id=int(env.str('OPERATORS_GROUP_ID')),
+            programmer_id=int(env.str('PROGRAMMER_GROUP_ID'))
         )
     )

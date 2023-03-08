@@ -1,9 +1,11 @@
 from aiogram.dispatcher import Dispatcher
 
-from tgbot.handlers.users import register_user
-from tgbot.handlers.admin import register_admin
+from .users import register_user
+from .admin import register_admin
+from .operator import register_operator
 
 
 def register_all_handlers(dp: Dispatcher) -> None:
     register_user(dp)
     register_admin(dp)
+    register_operator(dp)
