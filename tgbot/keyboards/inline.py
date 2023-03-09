@@ -81,3 +81,15 @@ def get_services_menu(service_number: int, max_service_number: int) -> InlineKey
     keyboard.add(InlineKeyboardButton('Добавить в корзину', callback_data='add_to_basket_service'))
 
     return keyboard
+
+
+def get_event_menu(event_number: int, max_event_number: int) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=2)
+
+    if not event_number == 0:
+        keyboard.insert(InlineKeyboardButton('<', callback_data=f'watch_event_{event_number - 1}'))
+
+    if not event_number == max_event_number:
+        keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_event_{event_number + 1}'))
+
+    return keyboard
