@@ -55,12 +55,24 @@ async def choice_privileged_user_menu(message: Message) -> None:
 
 
 async def get_service(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    logger.info('delete old service menu')
     await callback.message.delete()
-    print(callback.data)
+
+    logger.info('get service number')
     service_number = int(callback.data.split('_')[-1])
+
+    logger.info('get services list')
     services = Services(callback.bot.get('config').db).get_all_service()
+
+    logger.info('get service')
     service: ServicesTable = services[service_number]
 
+    logger.info('send service')
     await callback.bot.send_photo(callback.from_user.id,
                                   service.img,
                                   caption=service.text,
@@ -68,12 +80,24 @@ async def get_service(callback: CallbackQuery) -> None:
 
 
 async def get_event(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    logger.info('delete old event')
     await callback.message.delete()
 
+    logger.info('get event number')
     event_number = int(callback.data.split('_')[-1])
+
+    logger.info('get events list')
     events = Events(callback.bot.get('config').db).get_all_event()
+
+    logger.info('get event')
     event: EventsTable = events[event_number]
 
+    logger.info('send event')
     await callback.bot.send_photo(callback.from_user.id,
                                   event.img,
                                   caption=event.text,
@@ -85,6 +109,7 @@ def register_user(dp: Dispatcher) -> None:
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
+
     logger.info('Register user handler')
 
     logger.info('Register start function handler')

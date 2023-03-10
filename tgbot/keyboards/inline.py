@@ -9,7 +9,7 @@ def user_menu() -> InlineKeyboardMarkup:
 
     keyboard.insert(InlineKeyboardButton('Посмотреть услуги', callback_data='watch_service_0'))
     keyboard.insert(InlineKeyboardButton('Посмотреть событья', callback_data='watch_event_0'))
-    keyboard.insert(InlineKeyboardButton('Связатся с оператором', callback_data='call_with_operator'))
+    keyboard.insert(InlineKeyboardButton('Связатся с оператором', callback_data='call_with_operator_about_0'))
     keyboard.insert(InlineKeyboardButton('Корзинка', callback_data='basket'))
     return keyboard
 
@@ -73,7 +73,7 @@ def get_services_menu(service_number: int, max_service_number: int) -> InlineKey
     if not service_number == 0:
         keyboard.insert(InlineKeyboardButton('<', callback_data=f'watch_service_{service_number - 1}'))
 
-    keyboard.insert(InlineKeyboardButton('общатся с оператором', callback_data=f'call_with_operator_about_{service_number}'))
+    keyboard.insert(InlineKeyboardButton('связатся с оператором', callback_data=f'call_with_operator_about_{service_number}'))
 
     if not service_number == max_service_number:
         keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_service_{service_number + 1}'))

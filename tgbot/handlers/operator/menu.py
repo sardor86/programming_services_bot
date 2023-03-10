@@ -13,7 +13,6 @@ async def operator_menu(callback: CallbackQuery) -> None:
 
     logger.info('get operators group id')
     operator_group_id = callback.bot.get('config').id_group.operator_id
-    callback.message.chat.id
     logger.info('get operators group link')
     operator_group_link = await callback.bot.export_chat_invite_link(operator_group_id)
     await callback.message.edit_text(f'Зайдите в группу опараторов: {operator_group_link}')
