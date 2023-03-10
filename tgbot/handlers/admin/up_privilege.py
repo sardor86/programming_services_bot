@@ -21,16 +21,17 @@ async def choice_tip_user_admin(callback: CallbackQuery, state: FSMContext) -> N
 
     logging.info('save choice tip user in memory')
 
-    await callback.message.edit_text('Введите id пользователя')
+    await callback.message.edit_text('Введите номер телефона пользователя без + например:\n'
+                                     '998777777777')
 
     logging.info('set choice_user_id state in UpPrivilegeUsers')
     await UpPrivilegeUsers.choice_user_id.set()
 
 
 async def get_id_user_admin(message: Message, state: FSMContext) -> None:
-    logger.info('check id')
+    logger.info('check phone number')
     if not message.text.isdigit():
-        await message.reply('Вы вели не число')
+        await message.reply('Вы вели не номер')
         return
 
     logger.info('get tip user')

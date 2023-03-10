@@ -1,5 +1,5 @@
 import sqlalchemy as db
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, BigInteger
 from sqlalchemy.orm import declarative_base, Session
 
 from tgbot.config import DataBase
@@ -14,6 +14,7 @@ class UsersTable(Base):
     user_id = Column(Integer(), unique=True, nullable=False)
     user_name = Column(String())
     user_full_name = Column(String())
+    phone_number = Column(BigInteger(), unique=True, nullable=False)
     rights_admin = Column(Boolean, default=False)
     rights_programmer = Column(Boolean, default=False)
     rights_operator = Column(Boolean, default=False)
@@ -39,7 +40,8 @@ class Users:
 
     def add_users(self, user_id: int,
                   user_name: str,
-                  user_full_name: str, /,
+                  user_full_name: str,
+                  phone_number: int, /,
                   right_admin: bool = False,
                   right_programmer: bool = False,
                   right_operator: bool = False) -> bool:
@@ -47,6 +49,7 @@ class Users:
             self.session.add(UsersTable(user_id=user_id,
                                         user_name=user_name,
                                         user_full_name=user_full_name,
+                                        phone_number=phone_number,
                                         rights_admin=right_admin,
                                         rights_programmer=right_programmer,
                                         rights_operator=right_operator
@@ -59,11 +62,14 @@ class Users:
     def check_in_db_user(self, user_id: int) -> bool:
         return not self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first() is None
 
-    def get_all_information_user(self, user_id: int) -> UsersTable:
+    def get_all_information_user_id(self, user_id: int) -> UsersTable:
         return self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first()
 
-    def up_admin_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def get_all_information_user_phone_number(self, phone_number: int) -> UsersTable:
+        return self.session.query(UsersTable).filter(UsersTable.phone_number == phone_number).first()
+
+    def up_admin_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
@@ -71,8 +77,8 @@ class Users:
             self.session.commit()
             return True
 
-    def up_programmer_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def up_programmer_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
@@ -80,8 +86,8 @@ class Users:
             self.session.commit()
             return True
 
-    def up_operator_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def up_operator_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
@@ -89,8 +95,8 @@ class Users:
             self.session.commit()
             return True
 
-    def down_admin_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def down_admin_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
@@ -98,8 +104,8 @@ class Users:
             self.session.commit()
             return True
 
-    def down_programmer_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def down_programmer_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
@@ -107,8 +113,8 @@ class Users:
             self.session.commit()
             return True
 
-    def down_operator_right(self, user_id: int) -> bool:
-        user = self.get_all_information_user(user_id)
+    def down_operator_right(self, phone_number: int) -> bool:
+        user = self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:

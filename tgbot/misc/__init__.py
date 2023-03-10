@@ -1,3 +1,4 @@
-from .states import UpPrivilegeUsers, DownPrivilegeUsers, \
+from .states import RegisterUser, \
+                    UpPrivilegeUsers, DownPrivilegeUsers, \
                     AddEvent, DeleteEvent, \
                     AddService, DeleteService

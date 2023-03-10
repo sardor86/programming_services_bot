@@ -50,7 +50,7 @@ def operator_menu() -> InlineKeyboardMarkup:
 
 
 def choice_menu(db: DataBase, user_id: int) -> InlineKeyboardMarkup:
-    user = Users(db).get_all_information_user(user_id)
+    user = Users(db).get_all_information_user_id(user_id)
 
     keyboard = InlineKeyboardMarkup(row_width=1)
 

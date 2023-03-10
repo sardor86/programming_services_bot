@@ -19,7 +19,7 @@ class PrivilegedUsersFilter(BoundFilter):
             return True
 
         config: Config = obj.bot.get('config')
-        user = Users(config.db).get_all_information_user(obj.from_user.id)
+        user = Users(config.db).get_all_information_user_id(obj.from_user.id)
 
         if user.rights_admin or user.rights_programmer or user.rights_operator:
             return True

@@ -3,11 +3,13 @@ from aiogram.types import Message, CallbackQuery
 
 import logging
 
-from tgbot.keyboards import choice_menu, user_menu, get_services_menu, get_event_menu
+from tgbot.keyboards import choice_menu, user_menu, get_services_menu, get_event_menu, register_user_menu
 
 from tgbot.models import Users, \
                          Services, ServicesTable, \
                          Events, EventsTable
+
+from tgbot.misc import RegisterUser
 
 logger = logging.getLogger(__name__)
 
@@ -19,14 +21,17 @@ async def start_user(message: Message) -> None:
     )
     logger.info('Command start')
 
-    await message.reply(f'Приветствуем {message.from_user.username}\n'
-                        f'вы здесь можете купить услуги по программированию',
-                        reply_markup=user_menu())
+    user_info = Users(message.bot.get('config').db).get_all_information_user_id(message.from_user.id)
 
-    logger.info('Register new user')
-    Users(message.bot.get('config').db).add_users(message.from_user.id,
-                                                  message.from_user.username,
-                                                  message.from_user.full_name)
+    if user_info is None:
+        await RegisterUser.get_phone_number.set()
+
+        await message.reply('Чтобы зарегестрироватся надо отправить свой номер телефона',
+                            reply_markup=register_user_menu())
+    else:
+        await message.reply(f'Приветствуем {message.from_user.username}\n'
+                            f'вы здесь можете купить услуги по программированию',
+                            reply_markup=user_menu())
 
 
 async def help_user(message: Message) -> None:
