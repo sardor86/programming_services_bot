@@ -4,6 +4,7 @@ from .inline import user_menu, \
                     programmer_menu, \
                     operator_menu, \
                     get_services_menu, \
-                    get_event_menu
+                    get_event_menu, \
+                    get_work
 
 from .reply import register_user_menu

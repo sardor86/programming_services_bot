@@ -7,6 +7,7 @@ tgbot/handlers/__pycache__/
 tgbot/handlers/users/__pycache__/
 tgbot/handlers/admin/__pycache__/
 tgbot/handlers/operator/__pycache__/
+tgbot/handlers/programmer/__pycache__/
 tgbot/keyboards/__pycache__/
 tgbot/misc/__pycache__/
 tgbot/models/__pycache__/

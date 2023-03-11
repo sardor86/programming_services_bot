@@ -31,3 +31,7 @@ class AddService(StatesGroup):
 
 class DeleteService(StatesGroup):
     get_service_id = State()
+
+
+class GetTZFile(StatesGroup):
+    get_tz_file = State()

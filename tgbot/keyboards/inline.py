@@ -26,6 +26,15 @@ def admin_menu() -> InlineKeyboardMarkup:
     return keyboard
 
 
+def operator_menu() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=1)
+
+    keyboard.insert(InlineKeyboardButton('Создать работу для программиста', callback_data='create_new_work_for_programmer'))
+    keyboard.insert(InlineKeyboardButton('Зайти в группу операторов', callback_data='come_in_operators_group'))
+
+    return keyboard
+
+
 def admin_choice_tip_user() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
@@ -36,13 +45,6 @@ def admin_choice_tip_user() -> InlineKeyboardMarkup:
 
 
 def programmer_menu() -> InlineKeyboardMarkup:
-    keyboard = InlineKeyboardMarkup(row_width=1)
-
-    keyboard.insert(InlineKeyboardButton('something', callback_data='something'))
-    return keyboard
-
-
-def operator_menu() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
     keyboard.insert(InlineKeyboardButton('something', callback_data='something'))
@@ -91,5 +93,13 @@ def get_event_menu(event_number: int, max_event_number: int) -> InlineKeyboardMa
 
     if not event_number == max_event_number:
         keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_event_{event_number + 1}'))
+
+    return keyboard
+
+
+def get_work(operator_id) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=1)
+
+    keyboard.insert(InlineKeyboardButton('Принятся за работу', callback_data=f'get_work_from_{operator_id}'))
 
     return keyboard
