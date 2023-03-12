@@ -62,6 +62,9 @@ class Users:
     def check_in_db_user(self, user_id: int) -> bool:
         return not self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first() is None
 
+    def check_phone_number_user_in_db(self, phone_number: int) -> bool:
+        return not self.session.query(UsersTable).filter(UsersTable.phone_number == phone_number).first() is None
+
     def get_all_information_user_id(self, user_id: int) -> UsersTable:
         return self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first()
 

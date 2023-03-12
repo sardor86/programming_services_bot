@@ -3,7 +3,7 @@ from aiogram.dispatcher import Dispatcher
 import logging
 
 from tgbot.keyboards import operator_menu
-from tgbot.misc import GetTZFile
+from tgbot.misc import CreateNewWorkForProgrammer
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +33,11 @@ async def come_in_operators_group(callback: CallbackQuery) -> None:
 
 
 async def create_new_works_for_programmer(callback: CallbackQuery) -> None:
-    await GetTZFile.get_tz_file.set()
+    await CreateNewWorkForProgrammer.get_phone_number.set()
 
-    await callback.message.edit_text('Отправте нам тз файл для программиста')
+    await callback.message.edit_text('Отправте нам телефонный номер покупателя \n'
+                                     'без + пробелов и - например:\n'
+                                     '998998887766')
 
 
 def register_operator_menu_handler(dp: Dispatcher) -> None:

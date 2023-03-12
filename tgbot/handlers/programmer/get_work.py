@@ -14,6 +14,9 @@ async def get_work(callback: CallbackQuery) -> None:
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
 
+    logger.info('delete old message')
+    await callback.message.delete()
+
     logger.info('check programmer have work')
     if ProgrammerWork(callback.bot.get('config').db).check_have_work(callback.from_user.id):
         await callback.bot.send_message(callback.from_user.id, 'Вы имеете работу')

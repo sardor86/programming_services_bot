@@ -33,5 +33,6 @@ class DeleteService(StatesGroup):
     get_service_id = State()
 
 
-class GetTZFile(StatesGroup):
+class CreateNewWorkForProgrammer(StatesGroup):
+    get_phone_number = State()
     get_tz_file = State()
