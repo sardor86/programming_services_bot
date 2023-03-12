@@ -1,6 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from tgbot.models import Users
+from tgbot.models import Users, ProgrammerWork
 from tgbot.config import DataBase
 
 
@@ -35,19 +35,22 @@ def operator_menu() -> InlineKeyboardMarkup:
     return keyboard
 
 
+def programmer_menu(programmer_work_db: ProgrammerWork, programmer_id: int) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=1)
+
+    keyboard.insert(InlineKeyboardButton('Зайти в группу программистов', callback_data='come_in_programmers_group'))
+    if programmer_work_db.check_have_work(programmer_id):
+        keyboard.insert(InlineKeyboardButton('Закончить проект', callback_data='end_project'))
+
+    return keyboard
+
+
 def admin_choice_tip_user() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
     keyboard.insert(InlineKeyboardButton('Админ', callback_data='choice_admin_tip'))
     keyboard.insert(InlineKeyboardButton('Программист', callback_data='choice_programmer_tip'))
     keyboard.insert(InlineKeyboardButton('Оператор', callback_data='choice_operator_tip'))
-    return keyboard
-
-
-def programmer_menu() -> InlineKeyboardMarkup:
-    keyboard = InlineKeyboardMarkup(row_width=1)
-
-    keyboard.insert(InlineKeyboardButton('something', callback_data='something'))
     return keyboard
 
 
