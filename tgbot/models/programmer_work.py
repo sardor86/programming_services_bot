@@ -38,6 +38,7 @@ class ProgrammerWork:
             operator_id=operator_id,
             programmer_id=programmer_id
         ))
+        self.session.commit()
 
     def check_work(self, operator_id: int, programmer_id: int) -> bool:
         return not self.session.query(ProgrammerWorkTable).filter(ProgrammerWorkTable.operator_id == operator_id,
@@ -45,7 +46,11 @@ class ProgrammerWork:
 
     def delete_work(self, operator_id: int, programmer_id: int) -> bool:
         if self.check_work(operator_id, programmer_id):
-            self.session.delete(self.session.query(ProgrammerWorkTable).filter(operator_id=operator_id,
-                                                                               programmer_id=programmer_id).first())
+            self.session.delete(self.session.query(ProgrammerWorkTable).filter(ProgrammerWorkTable.operator_id == operator_id,
+                                                                               ProgrammerWorkTable.programmer_id == programmer_id).first())
+            self.session.commit()
             return True
         return False
+
+    def check_have_work(self, programmer_id) -> bool:
+        return not self.session.query(ProgrammerWorkTable).filter(ProgrammerWorkTable.programmer_id == programmer_id).first() is None
