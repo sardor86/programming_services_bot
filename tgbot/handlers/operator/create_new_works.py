@@ -50,7 +50,7 @@ async def get_file(message: Message, state: FSMContext) -> None:
     await message.bot.send_document(message.bot.get('config').id_group.programmer_id,
                                     message.document.file_id,
                                     caption=f'Телефон покупателя: {phone_number}',
-                                    reply_markup=get_work(message.from_user.id))
+                                    reply_markup=get_work(phone_number))
 
     logger.info('end create a new work for programmer')
     await state.finish()

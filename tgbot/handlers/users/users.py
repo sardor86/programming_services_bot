@@ -7,7 +7,8 @@ from tgbot.keyboards import choice_menu, user_menu, get_services_menu, get_event
 
 from tgbot.models import Users, \
                          Services, ServicesTable, \
-                         Events, EventsTable
+                         Events, EventsTable,\
+                         ProgrammerWork
 
 from tgbot.misc import RegisterUser
 
@@ -15,11 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 async def start_user(message: Message) -> None:
-    logging.basicConfig(
-        level=logging.INFO,
-        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
-    )
-    logger.info('Command start')
 
     user_info = Users(message.bot.get('config').db).get_all_information_user_id(message.from_user.id)
 
@@ -104,6 +100,22 @@ async def get_event(callback: CallbackQuery) -> None:
                                   reply_markup=get_event_menu(event_number, len(events) - 1))
 
 
+async def complete_work(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    logger.info('get client phone number')
+    client_phone_number = Users(callback.bot.get('config').db).get_all_information_user_id(callback.from_user.id).phone_number
+
+    logger.info('delete work in db')
+    ProgrammerWork(callback.bot.get('config').db).delete_work(client_phone_number, int(callback.data.split('_')[-1]))
+
+    await callback.message.edit_text('Проект выполнен')
+    await callback.bot.send_message(callback.data.split('_')[-1], 'Проект выполнен')
+
+
 def register_user(dp: Dispatcher) -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -138,3 +150,8 @@ def register_user(dp: Dispatcher) -> None:
     logger.info('register event menu handler')
     dp.register_callback_query_handler(get_event,
                                        lambda callback: callback.data[:11] == 'watch_event')
+
+    logger.info('register complete project handler')
+    dp.register_callback_query_handler(complete_work,
+                                       lambda callback: callback.data[:14] == 'completed_work',
+                                       state='*')

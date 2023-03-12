@@ -36,3 +36,7 @@ class DeleteService(StatesGroup):
 class CreateNewWorkForProgrammer(StatesGroup):
     get_phone_number = State()
     get_tz_file = State()
+
+
+class EndProject(StatesGroup):
+    get_github_project_link = State()

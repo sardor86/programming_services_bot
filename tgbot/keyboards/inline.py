@@ -100,9 +100,17 @@ def get_event_menu(event_number: int, max_event_number: int) -> InlineKeyboardMa
     return keyboard
 
 
-def get_work(operator_id) -> InlineKeyboardMarkup:
+def get_work(phone_number: int) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
-    keyboard.insert(InlineKeyboardButton('Принятся за работу', callback_data=f'get_work_from_{operator_id}'))
+    keyboard.insert(InlineKeyboardButton('Принятся за работу', callback_data=f'get_work_from_{phone_number}'))
+
+    return keyboard
+
+
+def completed_work(programmer_id: int) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=1)
+
+    keyboard.insert(InlineKeyboardButton('Подтвердить', callback_data=f'completed_work_{programmer_id}'))
 
     return keyboard

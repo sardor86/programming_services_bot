@@ -3,6 +3,7 @@ from aiogram.dispatcher import Dispatcher
 
 from tgbot.models import ProgrammerWork
 from tgbot.keyboards import programmer_menu
+from tgbot.misc import EndProject
 
 import logging
 
@@ -36,6 +37,18 @@ async def come_in_programmers_group(callback: CallbackQuery) -> None:
     await callback.message.edit_text(f'Зайдите в группу программистов: {programmers_group_link}')
 
 
+async def end_project(callback: CallbackQuery) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+
+    logger.info('get github project links')
+    await callback.message.edit_text('Отправте github сылку')
+
+    await EndProject.get_github_project_link.set()
+
+
 def register_programmer_menu_handler(dp: Dispatcher) -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -51,3 +64,7 @@ def register_programmer_menu_handler(dp: Dispatcher) -> None:
     dp.register_callback_query_handler(come_in_programmers_group,
                                        lambda callback: callback.data == 'come_in_programmers_group',
                                        state='*')
+
+    logger.info('register end project handler for programmer')
+    dp.register_callback_query_handler(end_project,
+                                       lambda callback: callback.data == 'end_project')

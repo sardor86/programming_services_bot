@@ -23,7 +23,8 @@ async def get_work(callback: CallbackQuery) -> None:
         return None
 
     logger.info('programmer get a new work')
-    ProgrammerWork(callback.bot.get('config').db).create_work(int(callback.data.split('_')[-1]), callback.from_user.id)
+    ProgrammerWork(callback.bot.get('config').db).create_work(callback.from_user.id,
+                                                              int(callback.data.split('_')[-1]))
     await callback.bot.send_message(callback.from_user.id, 'Вы получили новую работу')
 
 
