@@ -10,7 +10,7 @@ def user_menu() -> InlineKeyboardMarkup:
     keyboard.insert(InlineKeyboardButton('Посмотреть услуги', callback_data='watch_service_0'))
     keyboard.insert(InlineKeyboardButton('Посмотреть событья', callback_data='watch_event_0'))
     keyboard.insert(InlineKeyboardButton('Связатся с оператором', callback_data='call_with_operator_about_0'))
-    keyboard.insert(InlineKeyboardButton('Корзинка', callback_data='basket'))
+    keyboard.insert(InlineKeyboardButton('Корзинка', callback_data='basket_0'))
     return keyboard
 
 
@@ -112,5 +112,18 @@ def completed_work(programmer_id: int) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
     keyboard.insert(InlineKeyboardButton('Подтвердить', callback_data=f'completed_work_{programmer_id}'))
+
+    return keyboard
+
+
+def get_basket_menu(service_id: int, max_basket_number) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=3)
+
+    if not service_id == 0:
+        keyboard.insert(InlineKeyboardButton('<', callback_data=f'watch_event_{service_id - 1}'))
+    
+
+    if not service_id == max_basket_number:
+        keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_event_{service_id + 1}'))
 
     return keyboard

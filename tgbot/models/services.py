@@ -40,8 +40,8 @@ class Services:
         self.session.commit()
         return self.session.query(ServicesTable).all()[-1].id
 
-    def check_service(self, event_id: int) -> bool:
-        return not self.session.query(ServicesTable).filter(ServicesTable.id == event_id).first() is None
+    def check_service(self, service_id: int) -> bool:
+        return not self.session.query(ServicesTable).filter(ServicesTable.id == service_id).first() is None
 
     def delete_service(self, service_id: int) -> bool:
         if self.check_service(service_id):
@@ -53,5 +53,5 @@ class Services:
     def get_all_service(self) -> list:
         return self.session.query(ServicesTable).all()
 
-    def get_service(self, event_id: int) -> ServicesTable:
-        return self.session.query(ServicesTable).filter(ServicesTable.id == event_id).first()
+    def get_service(self, service_id: int) -> ServicesTable:
+        return self.session.query(ServicesTable).filter(ServicesTable.id == service_id).first()

@@ -11,7 +11,7 @@ class UsersTable(Base):
     __tablename__ = 'users'
 
     id = Column(Integer(), primary_key=True)
-    user_id = Column(Integer(), unique=True, nullable=False)
+    user_id = Column(BigInteger(), unique=True, nullable=False)
     user_name = Column(String())
     user_full_name = Column(String())
     phone_number = Column(BigInteger(), unique=True, nullable=False)
