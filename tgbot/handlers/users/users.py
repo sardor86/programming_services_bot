@@ -1,4 +1,4 @@
-from aiogram.dispatcher import Dispatcher
+from aiogram.dispatcher import Dispatcher, FSMContext
 from aiogram.types import Message, CallbackQuery
 
 import logging
@@ -15,8 +15,24 @@ from tgbot.misc import RegisterUser
 logger = logging.getLogger(__name__)
 
 
-async def start_user(message: Message) -> None:
+async def cansel(message: Message, state: FSMContext) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+    logger.info('Command cansel')
 
+    if not await state.get_state() is None:
+        await message.reply('Отменено')
+        await state.finish()
+
+
+async def start_user(message: Message) -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
+    )
+    logger.info('Command start')
     user_info = Users(message.bot.get('config').db).get_all_information_user_id(message.from_user.id)
 
     if user_info is None:
@@ -123,6 +139,11 @@ def register_user(dp: Dispatcher) -> None:
     )
 
     logger.info('Register user handler')
+
+    logger.info('register cansel function handler')
+    dp.register_message_handler(cansel,
+                                commands='cansel',
+                                state='*')
 
     logger.info('Register start function handler')
     dp.register_message_handler(start_user,
