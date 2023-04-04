@@ -1,152 +1,129 @@
-import sqlalchemy as db
-from sqlalchemy import Column, Integer, String, Boolean, BigInteger
-from sqlalchemy.orm import declarative_base, Session
-
-from tgbot.config import DataBase
-
-Base = declarative_base()
-
-
-class UsersTable(Base):
-    __tablename__ = 'users'
-
-    id = Column(Integer(), primary_key=True)
-    user_id = Column(BigInteger(), unique=True, nullable=False)
-    user_name = Column(String())
-    user_full_name = Column(String())
-    phone_number = Column(BigInteger(), unique=True, nullable=False)
-    rights_admin = Column(Boolean, default=False)
-    rights_programmer = Column(Boolean, default=False)
-    rights_operator = Column(Boolean, default=False)
-
-    def __str__(self) -> str:
-        return f'<User {self.user_id}>'
-
-    def __repr__(self) -> str:
-        return f'<User {self.user_id}>'
+from tgbot.config import gino_db
+from .base import Base
 
 
 class Users:
-    def __init__(self, data_base: DataBase) -> None:
-        self.engine = db.create_engine(f'postgresql://{data_base.user}:'
-                                       f'{data_base.password}@'
-                                       f'{data_base.host}:5432/'
-                                       f'{data_base.data_base}')
-        self.conn = self.engine.connect()
-        self.session = Session(bind=self.engine)
+    class UsersTable(gino_db.Model):
+        __tablename__ = 'users'
 
-    def create_db(self):
-        Base.metadata.create_all(self.engine)
+        id = gino_db.Column(gino_db.Integer(), primary_key=True)
+        user_id = gino_db.Column(gino_db.BigInteger(), unique=True, nullable=False)
+        user_name = gino_db.Column(gino_db.String())
+        user_full_name = gino_db.Column(gino_db.String())
+        phone_number = gino_db.Column(gino_db.BigInteger(), unique=True, nullable=False)
+        rights_admin = gino_db.Column(gino_db.Boolean, default=False)
+        rights_programmer = gino_db.Column(gino_db.Boolean, default=False)
+        rights_operator = gino_db.Column(gino_db.Boolean, default=False)
 
-    def add_users(self, user_id: int,
-                  user_name: str,
-                  user_full_name: str,
-                  phone_number: int, /,
-                  right_admin: bool = False,
-                  right_programmer: bool = False,
-                  right_operator: bool = False) -> bool:
-        if not self.check_in_db_user(user_id):
-            self.session.add(UsersTable(user_id=user_id,
-                                        user_name=user_name,
-                                        user_full_name=user_full_name,
-                                        phone_number=phone_number,
-                                        rights_admin=right_admin,
-                                        rights_programmer=right_programmer,
-                                        rights_operator=right_operator
-                                        ))
-            self.session.commit()
+        def __str__(self) -> str:
+            return f'<User {self.user_id}>'
+
+        def __repr__(self) -> str:
+            return f'<User {self.user_id}>'
+
+    async def add_users(self, user_id: int,
+                        user_name: str,
+                        user_full_name: str,
+                        phone_number: int, /,
+                        right_admin: bool = False,
+                        right_programmer: bool = False,
+                        right_operator: bool = False) -> bool:
+        if not await self.check_in_db_user(user_id):
+            user = self.UsersTable(user_id=user_id,
+                                   user_name=user_name,
+                                   user_full_name=user_full_name,
+                                   phone_number=phone_number,
+                                   rights_admin=right_admin,
+                                   rights_programmer=right_programmer,
+                                   rights_operator=right_operator
+                                   )
+            await user.create()
             return True
         else:
             return False
 
-    def check_in_db_user(self, user_id: int) -> bool:
-        return not self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first() is None
+    async def check_in_db_user(self, user_id: int) -> bool:
+        return not await self.UsersTable.query().where(self.UsersTable.user_id == user_id).gino.first() is None
 
-    def check_phone_number_user_in_db(self, phone_number: int) -> bool:
-        return not self.session.query(UsersTable).filter(UsersTable.phone_number == phone_number).first() is None
+    async def check_phone_number_user_in_db(self, phone_number: int) -> bool:
+        return not await self.UsersTable.query().where(self.UsersTable.phone_number == phone_number).gino.first() is None
 
-    def get_all_information_user_id(self, user_id: int) -> UsersTable:
-        return self.session.query(UsersTable).filter(UsersTable.user_id == user_id).first()
+    async def get_all_information_user_id(self, user_id: int) -> UsersTable:
+        return await self.UsersTable.query().where(self.UsersTable.user_id == user_id).gino.first()
 
-    def get_all_information_user_phone_number(self, phone_number: int) -> UsersTable:
-        return self.session.query(UsersTable).filter(UsersTable.phone_number == phone_number).first()
+    async def get_all_information_user_phone_number(self, phone_number: int) -> UsersTable:
+        return await self.UsersTable.query().filter(self.UsersTable.phone_number == phone_number).gino.first()
 
-    def up_admin_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def up_admin_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_admin = True
-            self.session.commit()
+            user.update(rights_admin=True).apply()
             return True
 
-    def up_programmer_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def up_programmer_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_programmer = True
-            self.session.commit()
+            user.update(rights_programmer=True).apply()
             return True
 
-    def up_operator_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def up_operator_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_operator = True
-            self.session.commit()
+            user.update(rights_operator=True).apply()
             return True
 
-    def down_admin_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def down_admin_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_admin = False
-            self.session.commit()
+            user.update(rights_admin=False).apply()
             return True
 
-    def down_programmer_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def down_programmer_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_programmer = False
-            self.session.commit()
+            user.update(rights_programmer=False).apply()
             return True
 
-    def down_operator_right(self, phone_number: int) -> bool:
-        user = self.get_all_information_user_phone_number(phone_number)
+    async def down_operator_right(self, phone_number: int) -> bool:
+        user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.rights_operator = False
-            self.session.commit()
+            user.update(rights_operator=False).apply()
             return True
 
-    def get_all_admin(self) -> list:
-        return self.session.query(UsersTable).filter(UsersTable.rights_admin == True).all()
+    async def get_all_admin(self) -> list:
+        return await self.UsersTable.query().where(self.UsersTable.rights_admin == True).gino.all()
 
-    def get_all_programmer(self) -> list:
-        return self.session.query(UsersTable).filter(UsersTable.rights_programmer == True).all()
+    async def get_all_programmer(self) -> list:
+        return await self.UsersTable.query().where(self.UsersTable.rights_programmer == True).gino.all()
 
-    def get_all_operator(self) -> list:
-        return self.session.query(UsersTable).filter(UsersTable.rights_operator == True).all()
+    async def get_all_operator(self) -> list:
+        return await self.UsersTable.query().where(self.UsersTable.rights_operator == True).gino.all()
 
-    def get_all_users(self) -> list:
-        return self.session.query(UsersTable).filter(UsersTable.rights_admin == False and
-                                                     UsersTable.rights_programmer == False and
-                                                     UsersTable.rights_operator == False).all()
+    async def get_all_users(self) -> list:
+        return self.UsersTable.query().where(self.UsersTable.rights_admin == False and
+                                             self.UsersTable.rights_programmer == False and
+                                             self.UsersTable.rights_operator == False).gino.all()
 
-    def check_admin(self, user_id: int) -> bool:
-        return not self.session.query(UsersTable).filter(UsersTable.rights_admin == True and
-                                                         UsersTable.user_id == user_id).first() is None
+    async def check_admin(self, user_id: int) -> bool:
+        return not self.UsersTable.query().where(self.UsersTable.rights_admin == True and
+                                                 self.UsersTable.user_id == user_id).gino.first() is None
 
-    def check_programmer(self, user_id: int) -> bool:
-        return not self.session.query(UsersTable).filter(UsersTable.rights_programmer == True and
-                                                         UsersTable.user_id == user_id).first() is None
+    async def check_programmer(self, user_id: int) -> bool:
+        return not self.UsersTable.query().filter(self.UsersTable.rights_programmer == True and
+                                                  self.UsersTable.user_id == user_id).gino.first() is None
 
-    def check_operator(self, user_id: int) -> bool:
-        return not self.session.query(UsersTable).filter(UsersTable.rights_operator == True and
-                                                         UsersTable.user_id == user_id).first() is None
+    async def check_operator(self, user_id: int) -> bool:
+        return not self.UsersTable.query().filter(self.UsersTable.rights_operator == True and
+                                                  self.UsersTable.user_id == user_id).gino.first() is None

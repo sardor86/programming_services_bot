@@ -39,23 +39,23 @@ async def get_id_user_admin(message: Message, state: FSMContext) -> None:
         user_tip = data['tip_user']
 
     logger.info('get user db')
-    user_data = Users(message.bot.get('config').db)
+    user_data = Users()
     if user_tip == 'admin':
-        if user_data.up_admin_right(int(message.text)):
+        if await user_data.up_admin_right(int(message.text)):
             logger.info('up user admin privilege')
             await message.reply('Вы повысили права пользователя')
         else:
             logger.warning('error up privilege user')
             await message.reply('Пользователь не нашлось')
     if user_tip == 'programmer':
-        if user_data.up_programmer_right(int(message.text)):
+        if await user_data.up_programmer_right(int(message.text)):
             logger.info('up user programmer privilege')
             await message.reply('Вы повысили права пользователя')
         else:
             logger.warning('error up privilege user')
             await message.reply('Пользователь не нашлось')
     if user_tip == 'operator':
-        if user_data.up_operator_right(int(message.text)):
+        if await user_data.up_operator_right(int(message.text)):
             logger.info('up user operator privilege')
             await message.reply('Вы повысили права пользователя')
         else:

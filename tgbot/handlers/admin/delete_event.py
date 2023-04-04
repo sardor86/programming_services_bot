@@ -22,7 +22,7 @@ async def get_id_event(message: Message, state: FSMContext) -> None:
         return None
 
     logger.info('delete event')
-    if not Events(message.bot.get('config').db).delete_event(int(message.text)):
+    if not await Events().delete_event(int(message.text)):
         logger.info('dont find event in db')
         await message.reply('Мы не смогли найти это событье')
         return None

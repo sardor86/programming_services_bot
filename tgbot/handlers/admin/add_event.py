@@ -52,13 +52,13 @@ async def get_text(message: Message, state: FSMContext) -> None:
     text = message.text
     logger.info('get text')
 
-    event_id = Events(message.bot.get('config').db).create_event(photo, text)
+    event_id = await Events().create_event(photo, text)
     logger.info('create event')
 
     await message.reply(f'Создана новая событие id: {event_id}')
     await message.reply('Идет рассылка события')
 
-    users = Users(message.bot.get('config').db).get_all_users()
+    users = await Users().get_all_users()
     for user in users:
         logger.info(f'send event from {user}')
         await message.bot.send_photo(chat_id=user.user_id, photo=photo, caption=text)

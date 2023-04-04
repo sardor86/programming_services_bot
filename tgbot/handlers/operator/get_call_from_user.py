@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher import Dispatcher
 
-from tgbot.models import Services, ServicesTable, Users
+from tgbot.models import Services, Users
 
 import logging
 
@@ -15,10 +15,10 @@ async def get_call_from_user(callback: CallbackQuery) -> None:
     )
 
     logger.info('get service')
-    service: ServicesTable = Services(callback.bot.get('config').db).get_all_service()[int(callback.data.split('_')[-1])]
+    service = await Services().get_all_service()[int(callback.data.split('_')[-1])]
 
     logger.info('get information user')
-    user = Users(callback.bot.get('config').db).get_all_information_user_id(callback.from_user.id)
+    user = await Users().get_all_information_user_id(callback.from_user.id)
 
     logger.info('send call from operators group')
     await callback.bot.send_photo(callback.bot.get('config').id_group.operator_id,

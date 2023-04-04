@@ -1,57 +1,39 @@
-import sqlalchemy as db
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import declarative_base, Session
-
-from tgbot.config import DataBase
-
-Base = declarative_base()
+from tgbot.config import gino_db
+from .base import Base
 
 
-class EventsTable(Base):
-    __tablename__ = 'events'
+class Events(Base):
+    class EventsTable(gino_db.Model):
+        __tablename__ = 'events'
 
-    id = Column(Integer(), primary_key=True)
-    img = Column(String(255), nullable=False)
-    text = Column(String(1024), default='')
+        id = gino_db.Column(gino_db.Integer(), primary_key=True)
+        img = gino_db.Column(gino_db.String(255), nullable=False)
+        text = gino_db.Column(gino_db.String(1024), default='')
 
-    def __str__(self) -> str:
-        return f'<Event {self.id}>'
+        def __str__(self) -> str:
+            return f'<Event {self.id}>'
 
-    def __repr__(self) -> str:
-        return f'<Event {self.id}>'
+        def __repr__(self) -> str:
+            return f'<Event {self.id}>'
 
+    async def create_event(self, img: str, text: str) -> int:
+        event = self.EventsTable(img=img,
+                                 text=text)
+        await event.create()
 
-class Events:
-    def __init__(self, data_base: DataBase) -> None:
-        self.engine = db.create_engine(f'postgresql://{data_base.user}:'
-                                       f'{data_base.password}@'
-                                       f'{data_base.host}:5432/'
-                                       f'{data_base.data_base}')
-        self.conn = self.engine.connect()
-        self.session = Session(bind=self.engine)
+        return event.id
 
-    def create_db(self):
-        Base.metadata.create_all(self.engine)
+    async def check_event(self, event_id: int) -> bool:
+        return not await self.EventsTable.query.where(self.EventsTable.id == event_id).gino.first() is None
 
-    def create_event(self, img: str, text: str) -> int:
-        event = EventsTable(img=img,
-                            text=text)
-        self.session.add(event)
-        self.session.commit()
-        return self.session.query(EventsTable).all()[-1].id
-
-    def check_event(self, event_id: int) -> bool:
-        return not self.session.query(EventsTable).filter(EventsTable.id == event_id).first() is None
-
-    def delete_event(self, event_id: int) -> bool:
-        if self.check_event(event_id):
-            self.session.delete(self.session.query(EventsTable).filter(EventsTable.id == event_id).first())
-            self.session.commit()
+    async def delete_event(self, event_id: int) -> bool:
+        if await self.check_event(event_id):
+            await self.EventsTable.query.where(self.EventsTable.id == event_id).gino.first().delete()
             return True
         return False
 
-    def get_all_event(self) -> list:
-        return self.session.query(EventsTable).all()
+    async def get_all_event(self) -> list:
+        return await self.EventsTable.query.gino.all()
 
-    def get_event(self, event_id: int) -> EventsTable:
-        return self.session.query(EventsTable).filter(EventsTable.id == event_id).first()
+    async def get_event(self, event_id: int) -> EventsTable:
+        return self.EventsTable.query.where(self.EventsTable.id == event_id).gino.first()

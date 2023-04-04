@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-
 from environs import Env
-
 import logging
+from gino import Gino
 
 logger = logging.getLogger(__name__)
+gino_db = Gino()
 
 
 @dataclass
@@ -33,7 +33,14 @@ class Config:
     id_group: IdGroup
 
 
-def load_config(path: str = None) -> Config:
+async def set_gino(data_base: DataBase) -> None:
+    await gino_db.set_bind(f'postgresql://{data_base.user}:'
+                           f'{data_base.password}@'
+                           f'{data_base.host}:5432/'
+                           f'{data_base.data_base}')
+
+
+async def load_config(path: str = None) -> Config:
     logging.basicConfig(
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
@@ -43,12 +50,12 @@ def load_config(path: str = None) -> Config:
     env = Env()
     env.read_env(path)
 
-    return Config(
+    config = Config(
         db=DataBase(
             host=env.str('DB_HOST'),
             user=env.str('DB_USER'),
             password=env.str('DB_PASSWORD'),
-            data_base=env.str('DB_DATA_BASE')
+            data_base=env.str('DB_DATA_BASE'),
         ),
         bot=TgBot(
             token=env.str('BOT_TOKEN')
@@ -58,3 +65,6 @@ def load_config(path: str = None) -> Config:
             programmer_id=int(env.str('PROGRAMMER_GROUP_ID'))
         )
     )
+
+    await set_gino(config.db)
+    return config

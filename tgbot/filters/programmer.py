@@ -15,7 +15,7 @@ class ProgrammerFilter(BoundFilter):
     async def check(self, obj):
         if self.is_programmer is None:
             return False
-        config: Config = obj.bot.get('config')
-        users = Users(config.db)
 
-        return users.check_programmer(obj.bot.from_user.id) == self.is_programmer
+        users = Users()
+
+        return await users.check_programmer(obj.bot.from_user.id) == self.is_programmer

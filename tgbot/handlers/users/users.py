@@ -6,8 +6,8 @@ import logging
 from tgbot.keyboards import choice_menu, user_menu, get_services_menu, get_event_menu, register_user_menu
 
 from tgbot.models import Users, \
-                         Services, ServicesTable, \
-                         Events, EventsTable,\
+                         Services, \
+                         Events, \
                          ProgrammerWork
 
 from tgbot.misc import RegisterUser
@@ -33,7 +33,7 @@ async def start_user(message: Message) -> None:
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
     logger.info('Command start')
-    user_info = Users(message.bot.get('config').db).get_all_information_user_id(message.from_user.id)
+    user_info = await Users().get_all_information_user_id(message.from_user.id)
 
     if user_info is None:
         await RegisterUser.get_phone_number.set()
@@ -63,7 +63,7 @@ async def choice_privileged_user_menu(message: Message) -> None:
     )
     logger.info('get menu')
     await message.reply(f'Выберите пользователя',
-                        reply_markup=choice_menu(message.bot.get('config').db, message.from_user.id))
+                        reply_markup=choice_menu(message.from_user.id))
 
 
 async def get_service(callback: CallbackQuery) -> None:
@@ -79,10 +79,10 @@ async def get_service(callback: CallbackQuery) -> None:
     service_number = int(callback.data.split('_')[-1])
 
     logger.info('get services list')
-    services = Services(callback.bot.get('config').db).get_all_service()
+    services = await Services().get_all_service()
 
     logger.info('get service')
-    service: ServicesTable = services[service_number]
+    service = services[service_number]
 
     logger.info('send service')
     await callback.bot.send_photo(callback.from_user.id,
@@ -104,10 +104,10 @@ async def get_event(callback: CallbackQuery) -> None:
     event_number = int(callback.data.split('_')[-1])
 
     logger.info('get events list')
-    events = Events(callback.bot.get('config').db).get_all_event()
+    events = await Events().get_all_event()
 
     logger.info('get event')
-    event: EventsTable = events[event_number]
+    event = events[event_number]
 
     logger.info('send event')
     await callback.bot.send_photo(callback.from_user.id,
@@ -123,10 +123,10 @@ async def complete_work(callback: CallbackQuery) -> None:
     )
 
     logger.info('get client phone number')
-    client_phone_number = Users(callback.bot.get('config').db).get_all_information_user_id(callback.from_user.id).phone_number
+    client_phone_number = await Users().get_all_information_user_id(callback.from_user.id).phone_number
 
     logger.info('delete work in db')
-    ProgrammerWork(callback.bot.get('config').db).delete_work(client_phone_number, int(callback.data.split('_')[-1]))
+    await ProgrammerWork().delete_work(client_phone_number, int(callback.data.split('_')[-1]))
 
     await callback.message.edit_text('Проект выполнен')
     await callback.bot.send_message(callback.data.split('_')[-1], 'Проект выполнен')

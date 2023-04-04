@@ -15,7 +15,7 @@ class AdminFilter(BoundFilter):
     async def check(self, obj):
         if self.is_admin is None:
             return False
-        config: Config = obj.bot.get('config')
-        users = Users(config.db)
 
-        return users.check_admin(obj.from_user.id) == self.is_admin
+        users = Users()
+
+        return await users.check_admin(obj.from_user.id) == self.is_admin

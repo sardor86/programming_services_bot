@@ -23,7 +23,7 @@ async def get_phone_number(message: Message, state: FSMContext) -> None:
         return None
 
     logger.info('check phone number in db')
-    if not Users(message.bot.get('config').db).check_phone_number_user_in_db(int(message.text)):
+    if not await Users().check_phone_number_user_in_db(int(message.text)):
         await message.reply('Этого номера не существует в базе данных')
 
     logger.info('save phone number to member')

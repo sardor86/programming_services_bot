@@ -18,7 +18,7 @@ async def main():
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
     logger.info('Starting bot')
-    config = load_config('.env')
+    config = await load_config('.env')
 
     storage = MemoryStorage()
     bot = Bot(token=config.bot.token, parse_mode='HTML')
@@ -31,7 +31,7 @@ async def main():
 
     register_all_handlers(dp)
 
-    create_all_db(config.db)
+    await create_all_db()
 
     # start
     try:

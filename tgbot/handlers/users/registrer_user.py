@@ -16,10 +16,10 @@ async def register_user(message: Message, state: FSMContext) -> None:
     )
     logger.info('add user in db')
 
-    Users(message.bot.get('config').db).add_users(message.from_user.id,
-                                                  message.from_user.username,
-                                                  message.from_user.full_name,
-                                                  int(message.contact.phone_number[1:]))
+    await Users().add_users(message.from_user.id,
+                            message.from_user.username,
+                            message.from_user.full_name,
+                            int(message.contact.phone_number[1:]))
 
     await message.reply('Вы зарегестрировались', reply_markup=ReplyKeyboardRemove())
     await state.finish()

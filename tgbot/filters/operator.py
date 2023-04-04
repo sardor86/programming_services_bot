@@ -15,9 +15,9 @@ class OperatorFilter(BoundFilter):
         if self.is_operator is None:
             return False
         
-        users = Users(obj.bot.get('config').db)
+        users = Users()
 
-        return users.check_operator(obj.from_user.id) == self.is_operator
+        return await users.check_operator(obj.from_user.id) == self.is_operator
 
 
 class OperatorGroupFilter(BoundFilter):
@@ -30,9 +30,9 @@ class OperatorGroupFilter(BoundFilter):
         if not self.in_group:
             return True
 
-        users = Users(obj.bot.get('config').db)
+        users = Users()
 
-        if users.check_operator(obj.from_user.id) is False:
+        if await users.check_operator(obj.from_user.id) is False:
             operator_group_id = obj.bot.get('config').id_group.operator_id
             await obj.bot.kick_chat_member(operator_group_id, obj.from_user.id)
             return False

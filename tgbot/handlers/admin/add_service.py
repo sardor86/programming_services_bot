@@ -5,7 +5,6 @@ import logging
 
 from tgbot.misc import AddService
 from tgbot.models import Services
-from tgbot.models import Users
 
 
 logger = logging.getLogger(__name__)
@@ -52,7 +51,7 @@ async def get_text(message: Message, state: FSMContext) -> None:
     text = message.text
     logger.info('get text')
 
-    services_id = Services(message.bot.get('config').db).create_service(photo, text)
+    services_id = await Services().create_service(photo, text)
     logger.info('create event')
 
     await message.reply(f'Создана новая услуга id: {services_id}')

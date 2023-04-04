@@ -22,7 +22,7 @@ async def get_id_service(message: Message, state: FSMContext) -> None:
         return None
 
     logger.info('delete service')
-    if not Services(message.bot.get('config').db).delete_service(int(message.text)):
+    if not await Services().delete_service(int(message.text)):
         logger.info('dont find service in db')
         await message.reply('Мы не смогли найти эту услугу')
         return None

@@ -1,7 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from tgbot.models import Users, ProgrammerWork
-from tgbot.config import DataBase
 
 
 def user_menu() -> InlineKeyboardMarkup:
@@ -34,11 +33,11 @@ def operator_menu() -> InlineKeyboardMarkup:
     return keyboard
 
 
-def programmer_menu(programmer_work_db: ProgrammerWork, programmer_id: int) -> InlineKeyboardMarkup:
+async def programmer_menu(programmer_work_db: ProgrammerWork, programmer_id: int) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
     keyboard.insert(InlineKeyboardButton('Зайти в группу программистов', callback_data='come_in_programmers_group'))
-    if programmer_work_db.check_have_work(programmer_id):
+    if await programmer_work_db.check_have_work(programmer_id):
         keyboard.insert(InlineKeyboardButton('Закончить проект', callback_data='end_project'))
 
     return keyboard
@@ -53,8 +52,8 @@ def admin_choice_tip_user() -> InlineKeyboardMarkup:
     return keyboard
 
 
-def choice_menu(db: DataBase, user_id: int) -> InlineKeyboardMarkup:
-    user = Users(db).get_all_information_user_id(user_id)
+async def choice_menu(user_id: int) -> InlineKeyboardMarkup:
+    user = await Users().get_all_information_user_id(user_id)
 
     keyboard = InlineKeyboardMarkup(row_width=1)
 
@@ -109,18 +108,5 @@ def completed_work(programmer_id: int) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(row_width=1)
 
     keyboard.insert(InlineKeyboardButton('Подтвердить', callback_data=f'completed_work_{programmer_id}'))
-
-    return keyboard
-
-
-def get_basket_menu(service_id: int, max_basket_number) -> InlineKeyboardMarkup:
-    keyboard = InlineKeyboardMarkup(row_width=3)
-
-    if not service_id == 0:
-        keyboard.insert(InlineKeyboardButton('<', callback_data=f'watch_event_{service_id - 1}'))
-    
-
-    if not service_id == max_basket_number:
-        keyboard.insert(InlineKeyboardButton('>', callback_data=f'watch_event_{service_id + 1}'))
 
     return keyboard

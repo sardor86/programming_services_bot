@@ -18,13 +18,12 @@ async def get_work(callback: CallbackQuery) -> None:
     await callback.message.delete()
 
     logger.info('check programmer have work')
-    if ProgrammerWork(callback.bot.get('config').db).check_have_work(callback.from_user.id):
+    if await ProgrammerWork().check_have_work(callback.from_user.id):
         await callback.bot.send_message(callback.from_user.id, 'Вы имеете работу')
         return None
 
     logger.info('programmer get a new work')
-    ProgrammerWork(callback.bot.get('config').db).create_work(callback.from_user.id,
-                                                              int(callback.data.split('_')[-1]))
+    await ProgrammerWork().create_work(callback.from_user.id, int(callback.data.split('_')[-1]))
     await callback.bot.send_message(callback.from_user.id, 'Вы получили новую работу')
 
 
