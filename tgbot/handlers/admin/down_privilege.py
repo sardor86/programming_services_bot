@@ -21,7 +21,7 @@ async def choice_tip_user_admin(callback: CallbackQuery, state: FSMContext) -> N
 
     logging.info('save choice tip user in memory')
 
-    await callback.message.edit_text('Введите id пользователя')
+    await callback.message.edit_text('Введите номер телефона пользователя')
 
     logging.info('set choice_user_id state in DownPrivilegeUsers')
     await DownPrivilegeUsers.choice_user_id.set()

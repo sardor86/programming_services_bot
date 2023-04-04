@@ -43,23 +43,23 @@ class Users:
             return False
 
     async def check_in_db_user(self, user_id: int) -> bool:
-        return not await self.UsersTable.query().where(self.UsersTable.user_id == user_id).gino.first() is None
+        return not await self.UsersTable.query.where(self.UsersTable.user_id == user_id).gino.first() is None
 
     async def check_phone_number_user_in_db(self, phone_number: int) -> bool:
-        return not await self.UsersTable.query().where(self.UsersTable.phone_number == phone_number).gino.first() is None
+        return not await self.UsersTable.query.where(self.UsersTable.phone_number == phone_number).gino.first() is None
 
     async def get_all_information_user_id(self, user_id: int) -> UsersTable:
-        return await self.UsersTable.query().where(self.UsersTable.user_id == user_id).gino.first()
+        return await self.UsersTable.query.where(self.UsersTable.user_id == user_id).gino.first()
 
     async def get_all_information_user_phone_number(self, phone_number: int) -> UsersTable:
-        return await self.UsersTable.query().filter(self.UsersTable.phone_number == phone_number).gino.first()
+        return await self.UsersTable.query.where(self.UsersTable.phone_number == phone_number).gino.first()
 
     async def up_admin_right(self, phone_number: int) -> bool:
         user = await self.get_all_information_user_phone_number(phone_number)
         if user is None:
             return False
         else:
-            user.update(rights_admin=True).apply()
+            await user.update(rights_admin=True).apply()
             return True
 
     async def up_programmer_right(self, phone_number: int) -> bool:
@@ -67,7 +67,7 @@ class Users:
         if user is None:
             return False
         else:
-            user.update(rights_programmer=True).apply()
+            await user.update(rights_programmer=True).apply()
             return True
 
     async def up_operator_right(self, phone_number: int) -> bool:
@@ -75,7 +75,7 @@ class Users:
         if user is None:
             return False
         else:
-            user.update(rights_operator=True).apply()
+            await user.update(rights_operator=True).apply()
             return True
 
     async def down_admin_right(self, phone_number: int) -> bool:
@@ -83,7 +83,7 @@ class Users:
         if user is None:
             return False
         else:
-            user.update(rights_admin=False).apply()
+            await user.update(rights_admin=False).apply()
             return True
 
     async def down_programmer_right(self, phone_number: int) -> bool:
@@ -91,7 +91,7 @@ class Users:
         if user is None:
             return False
         else:
-            user.update(rights_programmer=False).apply()
+            await user.update(rights_programmer=False).apply()
             return True
 
     async def down_operator_right(self, phone_number: int) -> bool:
@@ -99,31 +99,31 @@ class Users:
         if user is None:
             return False
         else:
-            user.update(rights_operator=False).apply()
+            await user.update(rights_operator=False).apply()
             return True
 
     async def get_all_admin(self) -> list:
-        return await self.UsersTable.query().where(self.UsersTable.rights_admin == True).gino.all()
+        return await self.UsersTable.query.where(self.UsersTable.rights_admin == True).gino.all()
 
     async def get_all_programmer(self) -> list:
-        return await self.UsersTable.query().where(self.UsersTable.rights_programmer == True).gino.all()
+        return await self.UsersTable.query.where(self.UsersTable.rights_programmer == True).gino.all()
 
     async def get_all_operator(self) -> list:
-        return await self.UsersTable.query().where(self.UsersTable.rights_operator == True).gino.all()
+        return await self.UsersTable.query.where(self.UsersTable.rights_operator == True).gino.all()
 
     async def get_all_users(self) -> list:
-        return self.UsersTable.query().where(self.UsersTable.rights_admin == False and
-                                             self.UsersTable.rights_programmer == False and
-                                             self.UsersTable.rights_operator == False).gino.all()
+        return await self.UsersTable.query.where(self.UsersTable.rights_admin == False and
+                                                 self.UsersTable.rights_programmer == False and
+                                                 self.UsersTable.rights_operator == False).gino.all()
 
     async def check_admin(self, user_id: int) -> bool:
-        return not self.UsersTable.query().where(self.UsersTable.rights_admin == True and
-                                                 self.UsersTable.user_id == user_id).gino.first() is None
+        return not await self.UsersTable.query.where(self.UsersTable.rights_admin == True and
+                                                     self.UsersTable.user_id == user_id).gino.first() is None
 
     async def check_programmer(self, user_id: int) -> bool:
-        return not self.UsersTable.query().filter(self.UsersTable.rights_programmer == True and
-                                                  self.UsersTable.user_id == user_id).gino.first() is None
+        return not await self.UsersTable.query.where(self.UsersTable.rights_programmer == True and
+                                                     self.UsersTable.user_id == user_id).gino.first() is None
 
     async def check_operator(self, user_id: int) -> bool:
-        return not self.UsersTable.query().filter(self.UsersTable.rights_operator == True and
-                                                  self.UsersTable.user_id == user_id).gino.first() is None
+        return not await self.UsersTable.query.where(self.UsersTable.rights_operator == True and
+                                                     self.UsersTable.user_id == user_id).gino.first() is None

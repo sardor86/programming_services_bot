@@ -28,7 +28,8 @@ class Events(Base):
 
     async def delete_event(self, event_id: int) -> bool:
         if await self.check_event(event_id):
-            await self.EventsTable.query.where(self.EventsTable.id == event_id).gino.first().delete()
+            event = await self.EventsTable.query.where(self.EventsTable.id == event_id).gino.first()
+            await event.delete()
             return True
         return False
 

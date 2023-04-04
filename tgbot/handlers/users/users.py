@@ -20,7 +20,7 @@ async def cansel(message: Message, state: FSMContext) -> None:
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
     )
-    logger.info('Command cansel')
+    logger.info('Command cancel')
 
     if not await state.get_state() is None:
         await message.reply('Отменено')
@@ -63,7 +63,7 @@ async def choice_privileged_user_menu(message: Message) -> None:
     )
     logger.info('get menu')
     await message.reply(f'Выберите пользователя',
-                        reply_markup=choice_menu(message.from_user.id))
+                        reply_markup=await choice_menu(message.from_user.id))
 
 
 async def get_service(callback: CallbackQuery) -> None:
@@ -123,7 +123,7 @@ async def complete_work(callback: CallbackQuery) -> None:
     )
 
     logger.info('get client phone number')
-    client_phone_number = await Users().get_all_information_user_id(callback.from_user.id).phone_number
+    client_phone_number = (await Users().get_all_information_user_id(callback.from_user.id)).phone_number
 
     logger.info('delete work in db')
     await ProgrammerWork().delete_work(client_phone_number, int(callback.data.split('_')[-1]))
@@ -142,7 +142,7 @@ def register_user(dp: Dispatcher) -> None:
 
     logger.info('register cansel function handler')
     dp.register_message_handler(cansel,
-                                commands='cansel',
+                                commands='cancel',
                                 state='*')
 
     logger.info('Register start function handler')

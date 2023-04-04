@@ -18,8 +18,8 @@ async def programmers_menu(callback: CallbackQuery) -> None:
 
     logger.info('get programmer menu')
     await callback.message.edit_text('Выберите действие',
-                                     reply_markup=programmer_menu(ProgrammerWork(),
-                                                                  callback.from_user.id))
+                                     reply_markup=await programmer_menu(ProgrammerWork(),
+                                                                        callback.from_user.id))
 
 
 async def come_in_programmers_group(callback: CallbackQuery) -> None:

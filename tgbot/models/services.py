@@ -23,17 +23,17 @@ class Services:
         return event.id
 
     async def check_service(self, service_id: int) -> bool:
-        return not await self.ServicesTable.query().where(self.ServicesTable.id == service_id).gino.first() is None
+        return not await self.ServicesTable.query.where(self.ServicesTable.id == service_id).gino.first() is None
 
     async def delete_service(self, service_id: int) -> bool:
         if await self.check_service(service_id):
-            service = await self.ServicesTable.query().where(self.ServicesTable.id == service_id).gino.first()
+            service = await self.ServicesTable.query.where(self.ServicesTable.id == service_id).gino.first()
             await service.delete()
             return True
         return False
 
     async def get_all_service(self) -> list:
-        return await self.ServicesTable.query().gino.all()
+        return await self.ServicesTable.query.gino.all()
 
     async def get_service(self, service_id: int) -> ServicesTable:
-        return await self.ServicesTable.query().where(self.ServicesTable.id == service_id).gino.first()
+        return await self.ServicesTable.query.where(self.ServicesTable.id == service_id).gino.first()

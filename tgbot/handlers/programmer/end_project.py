@@ -23,10 +23,10 @@ async def get_github_project_links(message: Message, state: FSMContext) -> None:
         return None
 
     logger.info('get client phone number')
-    phone_number_client = await ProgrammerWork().get_work(message.from_user.id).client_phone_number
+    phone_number_client = (await ProgrammerWork().get_work(message.from_user.id)).client_phone_number
 
     logger.info('get client id')
-    client_id = await Users().get_all_information_user_phone_number(phone_number_client).user_id
+    client_id = (await Users().get_all_information_user_phone_number(phone_number_client)).user_id
 
     await message.bot.send_message(client_id,
                                    'Подтвердите пожалуйста что проект выполнен',

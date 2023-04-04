@@ -10,4 +10,4 @@ class Base:
 
 
 async def create_all_db():
-    gino_db.create_all()
+    await gino_db.gino.create_all()

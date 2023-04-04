@@ -15,7 +15,7 @@ async def get_call_from_user(callback: CallbackQuery) -> None:
     )
 
     logger.info('get service')
-    service = await Services().get_all_service()[int(callback.data.split('_')[-1])]
+    service = (await Services().get_all_service())[int(callback.data.split('_')[-1])]
 
     logger.info('get information user')
     user = await Users().get_all_information_user_id(callback.from_user.id)
@@ -26,6 +26,8 @@ async def get_call_from_user(callback: CallbackQuery) -> None:
                                   caption=service.text + '\n========================\n'
                                                          f'имя пользователя: {callback.from_user.full_name}\n'
                                                          f'Телефонный номер: +{user.phone_number}\n')
+
+    await callback.bot.send_message(callback.from_user.id, 'Ваша заявка отправлена')
 
 
 def register_get_call_from_user_handler(dp: Dispatcher) -> None:
