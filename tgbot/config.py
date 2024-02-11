@@ -53,9 +53,9 @@ async def load_config(path: str = None) -> Config:
     config = Config(
         db=DataBase(
             host=env.str('DB_HOST'),
-            user=env.str('DB_USER'),
-            password=env.str('DB_PASSWORD'),
-            data_base=env.str('DB_DATA_BASE'),
+            user=env.str('POSTGRES_USER'),
+            password=env.str('POSTGRES_PASSWORD'),
+            data_base=env.str('POSTGRES_DB'),
         ),
         bot=TgBot(
             token=env.str('BOT_TOKEN')
