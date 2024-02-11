@@ -3,7 +3,7 @@
 ## Telegram bot for sell programming service
 
 ## How install this telegram bot
-```
+
 ### Firstly you should to create telegram bot in https://t.me/BotFather and get your telegram bot token
 
 ### Next step you should create operators group and programmers group after add your bot
